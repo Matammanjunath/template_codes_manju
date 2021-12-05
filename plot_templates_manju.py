@@ -16,14 +16,13 @@ def oscilloscope_plot(df,x='x',y=['y1','y2'],xlbl = ['xlabel','xuni'],
     color_list = list(mcolors.TABLEAU_COLORS)
     n = len(y)
     fig, axes = plt.subplots(nrows=n,ncols=1,sharex=True)
-    x = ['Time','S']
-    y = [['POA','W/m$^2$'],['str1vol','V'],['str1cur','A']]
     for i in range(n):
+        # print('%s'%(y[i][0]))
         axes[i] = plt.subplot((n*100)+10+(i+1))
-        plt.plot(df.index, df[y[i][0]],'-',color=color_list[i])
+        plt.plot(df[x], df[y[i]],'-',color=color_list[i])
         axes[i].grid(axis="y")
-        axes[i].legend(['%s'%(y[i][0])])
-        plt.ylabel('(in %s)'%(y[i][1]))
+        axes[i].legend(['%s'%(ylbl[i][0])])
+        plt.ylabel('(in %s)'%(ylbl[i][1]))
         if i==0:
             axes[i].spines['bottom'].set_visible(False)
         elif i!=(n-1):
@@ -34,7 +33,7 @@ def oscilloscope_plot(df,x='x',y=['y1','y2'],xlbl = ['xlabel','xuni'],
             plt.setp(axes[i].get_xaxis(), visible=True)
             axes[i].spines['top'].set_visible(False)
             axes[i].spines['bottom'].set_visible(True)
-            axes[i].set_xlabel('%s (in %s)'%(x[0],x[1]))
+            axes[i].set_xlabel('%s (in %s)'%(xlbl[0],xlbl[1]))
     plt.subplots_adjust(hspace=0.01)
     plt.subplots_adjust(left=0.12, right=0.97, top=0.95, bottom=0.15)
     temp_name = 'sun_inverterDCparams.png'
