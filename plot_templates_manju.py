@@ -22,7 +22,10 @@ def oscilloscope_plot(df,x='x',y=['y1','y2'],xlbl = ['xlabel','xuni'],
         plt.plot(df[x], df[y[i]],'-',color=color_list[i])
         axes[i].grid(axis="y")
         axes[i].legend(['%s'%(ylbl[i][0])])
-        plt.ylabel('(in %s)'%(ylbl[i][1]))
+        axes[i].spines['left'].set_color(color_list[i])
+        axes[i].tick_params(axis='y', color=color_list[i],
+                            labelcolor=color_list[i])
+        plt.ylabel('(in %s)'%(ylbl[i][1]), color=color_list[i])
         if i==0:
             axes[i].spines['bottom'].set_visible(False)
         elif i!=(n-1):
