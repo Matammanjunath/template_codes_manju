@@ -11,21 +11,22 @@ import matplotlib.colors as mcolors
 
 
 def oscilloscope_plot(df,x='x',y=['y1','y2'],xlbl = ['xlabel','xuni'],
-                      ylbl = [['ylabel1','yuni1'],['ylabel2','yuni2']],
-                      saveformat='Oscilloscope_plot.jpg'):
+                      ylbl = [['ylabel1','yuni1'],['ylabel2','yuni2']],linestyle='-',
+                      saveformat='Oscilloscope_plot.jpg',fontsize=12):
     color_list = list(mcolors.TABLEAU_COLORS)
     n = len(y)
     fig, axes = plt.subplots(nrows=n,ncols=1,sharex=True)
     for i in range(n):
         # print('%s'%(y[i][0]))
         axes[i] = plt.subplot((n*100)+10+(i+1))
-        plt.plot(df[x], df[y[i]],'-',color=color_list[i])
+        plt.plot(df[x], df[y[i]],
+                 '%s'%(linestyle),color=color_list[i])
         axes[i].grid(axis="y")
-        axes[i].legend(['%s'%(ylbl[i][0])])
+        axes[i].legend(['%s'%(ylbl[i][0])],fontsize=fontsize)
         axes[i].spines['left'].set_color(color_list[i])
         axes[i].tick_params(axis='y', color=color_list[i],
-                            labelcolor=color_list[i])
-        plt.ylabel('(in %s)'%(ylbl[i][1]), color=color_list[i])
+                            labelcolor=color_list[i],size=fontsize)
+        plt.ylabel('(in %s)'%(ylbl[i][1]), color=color_list[i],fontsize=fontsize)
         if i==0:
             axes[i].spines['bottom'].set_visible(False)
         elif i!=(n-1):
@@ -36,11 +37,12 @@ def oscilloscope_plot(df,x='x',y=['y1','y2'],xlbl = ['xlabel','xuni'],
             plt.setp(axes[i].get_xaxis(), visible=True)
             axes[i].spines['top'].set_visible(False)
             axes[i].spines['bottom'].set_visible(True)
-            axes[i].set_xlabel('%s (in %s)'%(xlbl[0],xlbl[1]))
+            axes[i].set_xlabel('%s (in %s)'%(xlbl[0],xlbl[1]),fontsize=fontsize)
+            axes[i].tick_params(axis='x',size=fontsize)
+    plt.gcf().autofmt_xdate()
     plt.subplots_adjust(hspace=0.01)
     plt.subplots_adjust(left=0.12, right=0.97, top=0.95, bottom=0.15)
-    temp_name = 'sun_inverterDCparams.png'
-    plt.savefig(temp_name,bbox_inches='tight',pad_inches=0.1, dpi=250)
+    plt.savefig(saveformat,bbox_inches='tight',pad_inches=0.1, dpi=250)
     plt.show()
     
     
@@ -88,7 +90,8 @@ def dataframe_scatter_polyfit_plot(df,xcol,ycols,xlim=None,ylim=None,
 def dataframe_html_3dscatterplot(df,xcol,ycol,zcol,
                                    clr_col,clr_labels=[],
                                    # clr_type=
-                                   size_col=None):
+                                   size_col=None,
+                                   xrange=None,yrange=None,zrange=None):
     import plotly.express as px
     from plotly.offline import plot
     import plotly
@@ -100,7 +103,7 @@ def dataframe_html_3dscatterplot(df,xcol,ycol,zcol,
                   color=clr_col,opacity=1,
                   color_continuous_scale  = plotly.colors.sequential.Viridis,
                    size=size_col)
-    print(clr_labels)
+    # print(clr_labels)
     if len(clr_labels) > 2:
         cat_labels = clr_labels
         fig.update_coloraxes(colorbar=dict(ticktext=cat_labels, 
@@ -131,18 +134,20 @@ def dataframe_html_3dscatterplot(df,xcol,ycol,zcol,
                              backgroundcolor="rgb(200, 200, 230)",
                              gridcolor="white",
                              showbackground=True,
-                             zerolinecolor="white",),
+                             zerolinecolor="white",
+                             range=xrange),
                         yaxis = dict(
                             backgroundcolor="rgb(230, 200,230)",
                             gridcolor="white",
                             showbackground=True,
                             zerolinecolor="white",
-                            range=[0,2.5]),
+                            range=yrange),
                         zaxis = dict(
                             backgroundcolor="rgb(230, 230,200)",
                             gridcolor="white",
                             showbackground=True,
-                            zerolinecolor="white",),))
+                            zerolinecolor="white",
+                             range=zrange),))
     # fig.update_layout(font=dict(size=20))
     fig.update_xaxes(tickfont_size=20)
     fig.update_scenes(xaxis_title_font=dict(size=24),
